@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ns1="http://sozi.baierouge.fr" xmlns:cc="http://creativecommons.org/ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:dc="http://purl.org/dc/elements/1.1/" id="svg2" xml:space="preserve" viewBox="0 0 105.15 38.399" version="1.1" inkscape:version="0.91 r13725">
+  <defs id="defs6">
+    <linearGradient id="linearGradient24" y2="126.86" gradientUnits="userSpaceOnUse" x2="-16.881" gradientTransform="matrix(.00912 2.4 2.4 -.00912 -262.2 73.199)" y1="126.86" x1="-23.456">
+      <stop id="stop26" style="stop-color:#202326" offset="0"/>
+      <stop id="stop28" style="stop-color:#232629" offset=".2"/>
+      <stop id="stop30" style="stop-color:#2d3132" offset=".36860"/>
+      <stop id="stop32" style="stop-color:#3e4241" offset=".52160"/>
+      <stop id="stop34" style="stop-color:#565a56" offset=".6706"/>
+      <stop id="stop36" style="stop-color:#747a72" offset=".8118"/>
+      <stop id="stop38" style="stop-color:#99a093" offset=".949"/>
+      <stop id="stop40" style="stop-color:#a7aea0" offset=".99610"/>
+      <stop id="stop42" style="stop-color:#a7aea0" offset="1"/>
+    </linearGradient>
+  </defs>
+  <g id="g10" transform="matrix(1.25,0,0,-1.25,0,38.399)">
+    <g id="g12">
+      <g id="g14">
+        <g id="g16">
+          <g id="g22">
+            <path id="path44" style="fill-rule:evenodd;fill:url(#linearGradient24)" d="m55.801 24c1.121-0.48 5.918-0.558 14.398-0.238 9.039 0.317 13.68 0.477 13.922 0.477l-18.723-6.84 4.563-6.961-4.563-10.438 0.481 8.879-5.52 8.161-19.797 6-12.964 0.597-27.598-4.676 18.598 6.84 19.562 3.239 7.801-2.04c5.437-1.519 8.719-2.519 9.84-3z" inkscape:connector-curvature="0"/>
+          </g>
+        </g>
+      </g>
+      <path id="path46" style="fill-rule:evenodd;fill:#c0c5bc" d="m62.52 26.879 14.281-1.199c-9.363-0.64-14.723-0.961-16.082-0.961-1.598-0.078-2.918-0.078-3.957 0-1.922 0.078-3.641 0.442-5.16 1.082l-13.563 4.918 10.199-1.437c0.403-0.082 2.602-0.524 6.602-1.325 4.078-0.796 6.64-1.16 7.68-1.078z" inkscape:connector-curvature="0"/>
+    </g>
+  </g>
+<metadata><rdf:RDF><cc:Work><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/><cc:license rdf:resource="http://creativecommons.org/licenses/publicdomain/"/><dc:publisher><cc:Agent rdf:about="http://openclipart.org/"><dc:title>Openclipart</dc:title></cc:Agent></dc:publisher></cc:Work><cc:License rdf:about="http://creativecommons.org/licenses/publicdomain/"><cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/><cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/><cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/></cc:License></rdf:RDF></metadata></svg>

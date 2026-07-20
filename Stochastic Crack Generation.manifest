@@ -1,0 +1,12 @@
+{
+	"autodeskProduct":	"Fusion",
+	"type":	"script",
+	"author":	"Brantley Lane",
+	"description":	{
+		"":	"Creates a 200 mm x 200 mm x 1 mm body with a stochastic crack generated. Used for experiments involved SHM or NDE."
+	},
+	"version":	"",
+	"supportedOS":	"windows",
+	"editEnabled":	true,
+	"iconFilename":	"ScriptIcon.svg"
+}
