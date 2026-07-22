@@ -1,4 +1,4 @@
-import adsk.core, adsk.fusion, traceback, random # type: ignore
+import adsk.core, adsk.fusion, traceback, random, math # type: ignore
 
 def run(context):
     ui = None
@@ -12,8 +12,8 @@ def run(context):
         ui.messageBox(f"Plate ({plate.name}) created successfully!")
 
         # put a crack in the plate
-        # create_crack(plate, design.rootComponent, app, ui, design)
-        # ui.messageBox("Stochastic crack created successfully!")
+        create_crack(plate, design.rootComponent, app, ui, design)
+        ui.messageBox("Stochastic crack created successfully!")
 
     except Exception as e:
         if ui:
@@ -108,31 +108,143 @@ def create_crack(plate, root_component, app, ui, design):
         sketch_lines = sketch.sketchCurves.sketchLines
         sketch.name = "crack_sketch"
 
-        # add central point to that sketch for the crack
-        central_x = random.uniform(-10, 10)
-        central_y = random.uniform(-10, 10)
-        central_point_coordinates = adsk.core.Point3D.create(central_x, central_y, 0)
-        central_point = sketch_points.add(central_point_coordinates)
+        # define the relative central point of the crack
 
-        # notify users of central point coordinates
-        ui.messageBox(f"Central point created at: ({central_x}, {central_y})")
+        central_relative = [0, 0]
 
-        # generate secondary points for the crack
-        number_of_secondary_points = random.randint(3, 6)
-        range_of_secondary_points = random.gauss(0, 2)
-        secondary_points = []
-        for i in range(number_of_secondary_points):
-            secondary_x = random.uniform(central_x - range_of_secondary_points, central_x + range_of_secondary_points)
-            secondary_y = random.uniform(central_y - range_of_secondary_points, central_y + range_of_secondary_points)
-            secondary_point_coordinates = adsk.core.Point3D.create(secondary_x, secondary_y, 0)
-            secondary_point = sketch_points.add(secondary_point_coordinates)
-            secondary_points.append(secondary_point)
+        # next, the random crack growth angles will be determined.
 
-        # connect secondary points to the central point
-        for point in secondary_points:
-            line = sketch_lines.addByTwoPoints(central_point, point)
+        first_growth_angle = random.uniform(0, 360)
+        second_growth_angle = (first_growth_angle + 180) % 360
+
+        growth_length = round(random.normalvariate(10, 2.5))
+
+        # branch 1 bends left
+        first_growth_segments = get_growth_segments(first_growth_angle, growth_length, bend_bias=0)
+
+        # branch 2 bends right
+        second_growth_segments = get_growth_segments(second_growth_angle, growth_length, bend_bias=0)
+
+
+        grow_crack(central_relative, first_growth_segments, second_growth_segments, sketch_points, sketch_lines)
 
     
     except Exception as e:
         traceback.print_exc()
         raise e
+
+def get_growth_segments(base_heading_deg, length, bend_bias):
+    # convert base heading to radians
+    base_heading = math.radians(base_heading_deg)
+
+    # starting point
+    starting_point = [0, 0]
+
+    # cumulative bend (keeps cracks separated)
+    cumulative_bend = 0
+
+    segments = []
+
+    for _ in range(length):
+        # segment length
+        segment_length = abs(random.normalvariate(0.1, 0.05))
+
+        # add biased bending
+        cumulative_bend += math.radians(random.normalvariate(bend_bias, 20))
+
+        # final angle = base heading + cumulative bend
+        segment_angle = base_heading + cumulative_bend
+
+        # compute endpoint
+        x = starting_point[0] + segment_length * math.cos(segment_angle)
+        y = starting_point[1] + segment_length * math.sin(segment_angle)
+        endpoint = [x, y]
+
+        segments.append([starting_point.copy(), endpoint])
+
+        starting_point = endpoint
+
+    return segments
+
+def grow_crack(central_relative, first_growth_segments, second_growth_segments, sketch_points, sketch_lines):
+    # find out how large the crack window is
+    largest_x = 0
+    largest_y = 0
+    lowest_x = 0
+    lowest_y = 0
+
+    all_segments = first_growth_segments + second_growth_segments
+    for segment in all_segments:
+
+        x1 = segment[0][0]
+        y1 = segment[0][1]
+        x2 = segment[1][0]
+        y2 = segment[1][1]
+
+        if x1 > largest_x:
+            largest_x = x1
+        if x2 > largest_x:
+            largest_x = x2
+        if y1 > largest_y:
+            largest_y = y1
+        if y2 > largest_y:
+            largest_y = y2
+
+        if x1 < lowest_x:
+            lowest_x = x1
+        if x2 < lowest_x:
+            lowest_x = x2
+        if y1 < lowest_y:
+            lowest_y = y1
+        if y2 < lowest_y:
+            lowest_y = y2
+        
+    difference_x = largest_x - lowest_x
+    difference_y = largest_y - lowest_y
+
+    # place crack window by top left corner
+    range_x = 20 - difference_x
+    range_y = 20 - difference_y
+
+    offset_x = random.uniform(-10, 10 - difference_x)
+    offset_y = random.uniform(-10, 10 - difference_y)
+
+    # apply offsets
+    for segment in all_segments:
+        segment[0][0] += offset_x
+        segment[0][1] += offset_y
+        segment[1][0] += offset_x
+        segment[1][1] += offset_y
+    central_absolute = [central_relative[0] + offset_x, central_relative[1] + offset_y]
+
+    # create points for the crack
+    central_point_coordinates = adsk.core.Point3D.create(central_absolute[0], central_absolute[1], 0)
+    central_point = sketch_points.add(central_point_coordinates)
+    # draw first growth
+    previous_coordinates = adsk.core.Point3D.create(central_absolute[0], central_absolute[1], 0)
+    previous = sketch_points.add(previous_coordinates)
+
+    for segment in first_growth_segments:
+        # translated start point
+        start_coordinates = adsk.core.Point3D.create(segment[0][0], segment[0][1], 0)
+        start_point = sketch_points.add(start_coordinates)
+
+        # translated end point
+        end_coordinates = adsk.core.Point3D.create(segment[1][0], segment[1][1], 0)
+        end_point = sketch_points.add(end_coordinates)
+
+        # draw segment
+        sketch_lines.addByTwoPoints(start_point, end_point)
+
+    # draw second growth
+    previous_coordinates = adsk.core.Point3D.create(central_absolute[0], central_absolute[1], 0)
+    previous = sketch_points.add(previous_coordinates)
+
+    for segment in second_growth_segments:
+        start_coordinates = adsk.core.Point3D.create(segment[0][0], segment[0][1], 0)
+        start_point = sketch_points.add(start_coordinates)
+
+        end_coordinates = adsk.core.Point3D.create(segment[1][0], segment[1][1], 0)
+        end_point = sketch_points.add(end_coordinates)
+
+        sketch_lines.addByTwoPoints(start_point, end_point)
